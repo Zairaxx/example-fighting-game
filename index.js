@@ -40,9 +40,9 @@ class Game {
         document.getElementById(`${fighter.name}-attack`).addEventListener('click', () => {
             const opponent = fighters.find(f => f !== fighter);
             if (opponent) {
-                fighter.attack(opponent);
-                document.getElementById(`${opponent.name}-health`).textContent = opponent.health;
-                document.getElementById(`${opponent.name}-progress`).value = opponent.health;
+                fighter.attack(opponent); //Ändrar värdet i datat
+                document.getElementById(`${opponent.name}-health`).textContent = opponent.health; //Uppdatera DOM:en till nya värden i datat 
+                document.getElementById(`${opponent.name}-progress`).value = opponent.health; //Uppdatera DOM:en till nya värden i datat 
                 if (opponent.health === 0) {
                     alert(`${fighter.name} wins!`);
                 }
