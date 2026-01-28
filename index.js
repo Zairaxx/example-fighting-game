@@ -44,7 +44,7 @@ class Game {
         container.appendChild(fighterDiv);
 
         document.getElementById(`${fighter.name}-attack`).addEventListener('click', () => {
-            const opponent = fighters.find(f => f !== fighter);
+            const opponent = Game.fighters.find(f => f !== fighter);
             if (opponent) {
                 fighter.attack(opponent); //Ändrar värdet i datat
                 document.getElementById(`${opponent.name}-health`).textContent = opponent.health; //Uppdatera DOM:en till nya värden i datat 
@@ -68,17 +68,16 @@ class Game {
     }
 
     static async addFighter() {
+        console.log(Game.fighters.length);
         if (Game.fighters.length < 2) {
             const fighter = await Fighter.generateFighter();
-            fighters.push(fighter);
+            Game.fighters.push(fighter);
             Game.renderFighter(fighter);
         }
-        if (Game.fighters.length === 2) {
+        if(Game.fighters.length === 2)  {
             document.getElementById('generate-fighter').disabled = true;
         }
     }
 }
-
-const fighters = [];
 
 Game.startGame();
