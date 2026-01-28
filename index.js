@@ -1,28 +1,33 @@
 class Fighter {
-    constructor(name, health, attackPower) {
+    constructor(name, health, attackPower, defense) {
         this.name = name;
         this.health = health;
         this.attackPower = attackPower;
+        this.defense = defense;
     }
 
     attack(opponent) {
         if (opponent.health > 0) {
-            opponent.health -= this.attackPower;
+            opponent.health -= (this.attackPower - opponent.defense);
             if (opponent.health < 0) opponent.health = 0;
         }
     }
 
     static async generateFighter() {
+        //Slumpmässigt namn från api
         const response = await fetch('https://randomuser.me/api/');
         const data = await response.json();
         const name = `${data.results[0].name.first} ${data.results[0].name.last}`;
         const health = Math.floor(Math.random() * (200 - 100 + 1)) + 100;
-        const attackPower = Math.floor(Math.random() * (20 - 10 + 1)) + 10;
-        return new Fighter(name, health, attackPower);
+        const attackPower = Math.floor(Math.random() * (30 - 20 + 1)) + 20;
+        const defense = Math.floor(Math.random() * (15 - 10 + 1)) + 10;
+        return new Fighter(name, health, attackPower,defense);
     }
 }
 
 class Game {
+
+    static fighters = [];
     static renderFighter(fighter) {
         const container = document.getElementById('game');
         const fighterDiv = document.createElement('div');
@@ -33,6 +38,7 @@ class Game {
             <p>Health: <span id="${fighter.name}-health">${fighter.health}</span></p>
             <progress id="${fighter.name}-progress" value="${fighter.health}" max="200"></progress>
             <p>Attack Power: ${fighter.attackPower}</p>
+            <p>Defense: ${fighter.defense}</p>
             <button id="${fighter.name}-attack" class="punch-button">Punch!</button>
         `;
         container.appendChild(fighterDiv);
@@ -58,16 +64,16 @@ class Game {
         button.textContent = 'Generate Fighter';
         button.classList.add('generate-button');
         button.addEventListener('click', Game.addFighter);
-        container.appendChild(button);
+        document.body.prepend(button);
     }
 
     static async addFighter() {
-        if (fighters.length < 2) {
+        if (Game.fighters.length < 2) {
             const fighter = await Fighter.generateFighter();
             fighters.push(fighter);
             Game.renderFighter(fighter);
         }
-        if (fighters.length === 2) {
+        if (Game.fighters.length === 2) {
             document.getElementById('generate-fighter').disabled = true;
         }
     }
